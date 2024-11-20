@@ -1,16 +1,23 @@
+"""Unit tests for the RACAD module."""
+
 import unittest
 from racad import get_attribute_docstring, get_attribute_docstrings
 from enum import Enum
+from typing import Any
 
-def some_decorator(cls):
+def some_decorator(cls: Any) -> Any:
     return cls
 
 class ModuleLevelClass:
+    """Class defined at the module level for testing."""
     f = 30
     """Docstring for f."""
 
 class TestRACAD(unittest.TestCase):
-    def test_simple_class(self):
+    """Test cases for the RACAD functions."""
+
+    def test_simple_class(self) -> None:
+        """Test retrieving docstrings from a simple class."""
         class MyClass:
             a = 5
             """Docstring for a."""
@@ -20,7 +27,8 @@ class TestRACAD(unittest.TestCase):
         self.assertEqual(docs['a'], 'Docstring for a.')
         self.assertEqual(docs['b'], 'Docstring for b.')
 
-    def test_nested_class(self):
+    def test_nested_class(self) -> None:
+        """Test retrieving docstrings from a nested class."""
         class OuterClass:
             c = 15
             """Docstring for c."""
@@ -34,7 +42,8 @@ class TestRACAD(unittest.TestCase):
         docs_inner = get_attribute_docstrings(OuterClass.InnerClass)
         self.assertEqual(docs_inner['d'], 'Docstring for d.')
 
-    def test_enum_class(self):
+    def test_enum_class(self) -> None:
+        """Test retrieving docstrings from an enum class."""
         class Color(Enum):
             RED = 1
             """Represents red color."""
@@ -44,7 +53,8 @@ class TestRACAD(unittest.TestCase):
         self.assertEqual(docs['RED'], 'Represents red color.')
         self.assertEqual(docs['BLUE'], 'Represents blue color.')
 
-    def test_class_in_function(self):
+    def test_class_in_function(self) -> None:
+        """Test retrieving docstrings from a class defined in a function."""
         def create_class():
             class DynamicClass:
                 e = 25
@@ -55,19 +65,22 @@ class TestRACAD(unittest.TestCase):
         docs = get_attribute_docstrings(DynamicClass)
         self.assertEqual(docs['e'], 'Docstring for e.')
 
-    def test_class_at_module_level(self):
+    def test_class_at_module_level(self) -> None:
+        """Test retrieving docstrings from a module-level class."""
         # Class defined at the module level
         docs = get_attribute_docstrings(ModuleLevelClass)
         self.assertEqual(docs['f'], 'Docstring for f.')
 
-    def test_attribute_without_docstring(self):
+    def test_attribute_without_docstring(self) -> None:
+        """Test handling attributes without docstrings."""
         class NoDocClass:
             g = 30
             # No docstring for g
         docs = get_attribute_docstrings(NoDocClass)
         self.assertNotIn('g', docs)
 
-    def test_multiline_docstring(self):
+    def test_multiline_docstring(self) -> None:
+        """Test retrieving multiline docstrings."""
         class MultiLineDocClass:
             h = 35
             """This is a
@@ -76,20 +89,42 @@ class TestRACAD(unittest.TestCase):
         docs = get_attribute_docstrings(MultiLineDocClass)
         self.assertEqual(docs['h'], 'This is a\nmultiline docstring\nfor attribute h.')
 
-    def test_attribute_with_comment(self):
+    def test_attribute_with_comment(self) -> None:
+        """Test that comments are not mistaken for docstrings."""
         class CommentClass:
             i = 40
             # This is a comment, not a docstring
         docs = get_attribute_docstrings(CommentClass)
         self.assertNotIn('i', docs)
 
-    def test_decorated_class(self):
+    def test_decorated_class(self) -> None:
+        """Test retrieving docstrings from a decorated class."""
         @some_decorator
         class DecoratedClass:
             j = 45
             """Docstring for j."""
         docs = get_attribute_docstrings(DecoratedClass)
         self.assertEqual(docs['j'], 'Docstring for j.')
+
+    def test_get_attribute_docstring(self) -> None:
+        """Test the get_attribute_docstring function."""
+        class SampleClass:
+            x = 100
+            """Docstring for x."""
+            y = 200
+            # No docstring for y
+
+        # Test attribute with docstring
+        doc_x = get_attribute_docstring(SampleClass, 'x')
+        self.assertEqual(doc_x, 'Docstring for x.')
+
+        # Test attribute without docstring
+        doc_y = get_attribute_docstring(SampleClass, 'y')
+        self.assertIsNone(doc_y)
+
+        # Test non-existent attribute
+        doc_z = get_attribute_docstring(SampleClass, 'z')
+        self.assertIsNone(doc_z)
 
 if __name__ == '__main__':
     unittest.main()
