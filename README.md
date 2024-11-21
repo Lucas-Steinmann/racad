@@ -1,6 +1,6 @@
 # RACAD
 
-RACAD stands for runtime accessible class attribute docstrings.
+RACAD stands for Runtime Access for Class Attribute Docstrings.
 This is the source code accompanying [my blogpost](https://www.steinm.net/blog/runtime_accessible_class_attribute_docstrings/) (not online yet).
 
 You can copy this code into your own project or use it as a library.
