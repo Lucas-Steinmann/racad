@@ -1,7 +1,7 @@
 # RACAD
 
 RACAD stands for runtime accessible class attribute docstrings.
-This is the source code accompaning [my blogpost](https://www.steinm.net/blog/runtime_accessible_class_attribute_docstrings/).
+This is the source code accompanying [my blogpost](https://www.steinm.net/blog/runtime_accessible_class_attribute_docstrings/) (not online yet).
 
 You can copy this code into your own project or use it as a library.
 
@@ -33,7 +33,6 @@ from racad import get_attribute_docstrings
 get_attribute_docstrings(MyClass)
 # Output: {'a': 'This is the docstring of a.'}
 ```
-
 
 ## Limitation
 
