@@ -65,8 +65,9 @@ class AttributeDocstringVisitor(ast.NodeVisitor):
         # Reset the last attribute name after processing
         self.last_attr_name = None
 
-
-def get_attribute_docstrings(cls: Type[Any]) -> Dict[str, str]:
+def _get_attribute_docstrings(
+        cls: Type[Any], 
+) -> Dict[str, str]:
     """Get the docstrings of all attributes of a class.
 
     Args:
@@ -87,6 +88,32 @@ def get_attribute_docstrings(cls: Type[Any]) -> Dict[str, str]:
     visitor = AttributeDocstringVisitor()
     visitor.visit(tree)
     return visitor.docs
+
+
+def get_attribute_docstrings(
+        cls: Type[Any], 
+        search_bases: bool = False
+) -> Dict[str, str]:
+    """Get the docstrings of all attributes of a class.
+
+    Args:
+        cls: The class to inspect.
+        search_bases: If true, follows the MRO and merges the docstrings.
+            Docstrings of attributes take earlier in the MRO 
+            take precedence in the case of name conflicts.
+
+    Returns:
+        A dictionary mapping attribute names to their docstrings.
+    """
+    def _recursive_collect(class_list):
+        if len(class_list) == 0:
+            return {}
+        base_docs = _recursive_collect(class_list[1:])
+        base_docs.update(_get_attribute_docstrings(class_list[0]))
+        return base_docs
+    mro = cls.__mro__ if search_bases else [cls]
+    return _recursive_collect(mro)
+
 
 def get_attribute_docstring(cls: Type[Any], attr_name: str) -> Optional[str]:
     """Get the docstring of a specific class attribute.

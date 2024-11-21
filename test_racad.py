@@ -152,6 +152,49 @@ class StringDefinedClass:
 
         docs = get_attribute_docstrings(StringDefinedClass)
         self.assertEqual(docs, {})
+    
+    def test_multi_assign_and_setitem(self) -> None:
+        class MyList(list):
+            pass
+
+        class MyWrongClass:
+            a = MyList([1,2])
+            a[0] = 2
+            """Setting first element to two."""
+            a.mylen = lambda: 2
+            """Hard-coding length."""
+
+            b, c = 1, 2
+            """Document two at once."""
+        
+        docs = get_attribute_docstrings(MyWrongClass)
+        self.assertEqual(docs, {})
+
+
+    def test_inherited_attribute(self) -> None:
+        class Parent:
+            a = 5
+            """This is the docstring for a."""
+        
+        class Child(Parent):
+            ...
+        
+        docs = get_attribute_docstrings(Child, search_bases=True)
+        self.assertEqual(docs['a'], 'This is the docstring for a.')
+
+
+    def test_overridden_attribute(self) -> None:
+        class Parent:
+            a = 5
+            """This is the docstring for a."""
+        
+        class Child(Parent):
+            a = 6
+            """This is the overridden docstring."""
+        
+        docs = get_attribute_docstrings(Child, search_bases=True)
+        self.assertEqual(docs['a'], 'This is the overridden docstring.')
+
 
 if __name__ == '__main__':
     unittest.main()
