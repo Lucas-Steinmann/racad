@@ -13,6 +13,7 @@ class ModuleLevelClass:
     f = 30
     """Docstring for f."""
 
+
 class TestRACAD(unittest.TestCase):
     """Test cases for the RACAD functions."""
 

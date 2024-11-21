@@ -65,14 +65,6 @@ class AttributeDocstringVisitor(ast.NodeVisitor):
         # Reset the last attribute name after processing
         self.last_attr_name = None
 
-    def generic_visit(self, node: ast.AST) -> None:
-        """Fallback visitor for nodes without a dedicated method.
-
-        Args:
-            node: The AST node to visit.
-        """
-        # Continue visiting child nodes
-        super().generic_visit(node)
 
 def get_attribute_docstrings(cls: Type[Any]) -> Dict[str, str]:
     """Get the docstrings of all attributes of a class.
