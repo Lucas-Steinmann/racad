@@ -166,7 +166,10 @@ class StringDefinedClass:
             """Hard-coding length."""
 
             b, c = 1, 2
-            """Document two at once."""
+            """Document unpacked tuple at once."""
+
+            d = e = 3
+            """Document multiple targets at once."""
         
         docs = get_attribute_docstrings(MyWrongClass)
         self.assertEqual(docs, {})
@@ -194,7 +197,7 @@ class StringDefinedClass:
             a = 5
             """This is the docstring for a."""
         
-        if sys.version_info < (3, 9):
+        if sys.version_info < (3, 9): # pragma: no cover
             # Before python 3.9, getsource always returned the first class with
             # the given name. In this case, it would return the class of a previous
             # test.
@@ -202,7 +205,7 @@ class StringDefinedClass:
                 a = 6
                 """This is the overridden docstring."""
             Child = Child_
-        else:
+        else: # pragma: no cover
             class Child(Parent):
                 a = 6
                 """This is the overridden docstring."""
@@ -211,7 +214,3 @@ class StringDefinedClass:
         self.assertEqual(docs['a'], 'This is the overridden docstring.')
         doc_a = get_attribute_docstring(Child, 'a', search_bases=True)
         self.assertEqual(doc_a, 'This is the overridden docstring.')
-
-
-if __name__ == '__main__':
-    unittest.main()

@@ -24,6 +24,12 @@ class AttributeDocstringVisitor(ast.NodeVisitor):
             self.visit(stmt)
         # Reset the last attribute name after processing the class
         self.last_attr_name = None
+    
+    def _store_target_attr_name(self, target: ast.expr) -> None:
+        if isinstance(target, ast.Name):
+            self.last_attr_name = target.id
+        else:
+            self.last_attr_name = None
 
     def visit_Assign(self, node: ast.Assign) -> None:
         """Visit an assignment node.
@@ -32,9 +38,10 @@ class AttributeDocstringVisitor(ast.NodeVisitor):
             node: The assignment AST node to visit.
         """
         # Handle simple assignments
-        if len(node.targets) == 1 and isinstance(node.targets[0], ast.Name):
-            self.last_attr_name = node.targets[0].id
+        if len(node.targets) == 1: 
+            self._store_target_attr_name(node.targets[0])
         else:
+            # Ignore multi assignments such as `a = b = 5`
             self.last_attr_name = None
 
     def visit_AnnAssign(self, node: ast.AnnAssign) -> None:
@@ -44,10 +51,7 @@ class AttributeDocstringVisitor(ast.NodeVisitor):
             node: The annotated assignment AST node to visit.
         """
         # Handle annotated assignments
-        if isinstance(node.target, ast.Name):
-            self.last_attr_name = node.target.id
-        else:
-            self.last_attr_name = None
+        self._store_target_attr_name(node.target)
 
     def visit_Expr(self, node: ast.Expr) -> None:
         """Visit an expression node.
