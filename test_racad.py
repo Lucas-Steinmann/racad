@@ -1,5 +1,6 @@
 """Unit tests for the RACAD module."""
 
+import sys
 import unittest
 from racad import get_attribute_docstring, get_attribute_docstrings
 from enum import Enum
@@ -193,9 +194,18 @@ class StringDefinedClass:
             a = 5
             """This is the docstring for a."""
         
-        class Child(Parent):
-            a = 6
-            """This is the overridden docstring."""
+        if sys.version_info < (3, 9):
+            # Before python 3.9, getsource always returned the first class with
+            # the given name. In this case, it would return the class of a previous
+            # test.
+            class Child_(Parent):
+                a = 6
+                """This is the overridden docstring."""
+            Child = Child_
+        else:
+            class Child(Parent):
+                a = 6
+                """This is the overridden docstring."""
         
         docs = get_attribute_docstrings(Child, search_bases=True)
         self.assertEqual(docs['a'], 'This is the overridden docstring.')
