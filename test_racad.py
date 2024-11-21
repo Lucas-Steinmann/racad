@@ -135,5 +135,22 @@ class TestRACAD(unittest.TestCase):
         docs = get_attribute_docstrings(dict)
         self.assertEqual(docs, {})
 
+    def test_string_defined_class(self) -> None:
+        """Test retrieving docstrings from a class defined in a string."""
+        class_def = """
+class StringDefinedClass:
+    k = 50
+    '''Docstring for k.'''
+    
+    l: int = 60
+    '''Docstring for l.'''
+"""
+        namespace = {}
+        exec(class_def, namespace)
+        StringDefinedClass = namespace['StringDefinedClass']
+
+        docs = get_attribute_docstrings(StringDefinedClass)
+        self.assertEqual(docs, {})
+
 if __name__ == '__main__':
     unittest.main()

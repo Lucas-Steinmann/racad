@@ -85,8 +85,9 @@ def get_attribute_docstrings(cls: Type[Any]) -> Dict[str, str]:
     """
     try:
         source = inspect.getsource(cls)
-    except TypeError:
+    except (TypeError, OSError):
         # TypeError is raised for built-in classes
+        # OSError is raised for classes defined in the interactive shell
         return {}
     source = textwrap.dedent(source)
     tree = ast.parse(source)
