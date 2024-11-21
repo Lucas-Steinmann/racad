@@ -126,5 +126,14 @@ class TestRACAD(unittest.TestCase):
         doc_z = get_attribute_docstring(SampleClass, 'z')
         self.assertIsNone(doc_z)
 
+    def test_builtin_class(self) -> None:
+        """Test that built-in classes return empty dictionaries."""
+        # Built-in classes don't have accessible source code
+        docs = get_attribute_docstrings(list)
+        self.assertEqual(docs, {})
+
+        docs = get_attribute_docstrings(dict)
+        self.assertEqual(docs, {})
+
 if __name__ == '__main__':
     unittest.main()

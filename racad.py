@@ -83,7 +83,11 @@ def get_attribute_docstrings(cls: Type[Any]) -> Dict[str, str]:
     Returns:
         A dictionary mapping attribute names to their docstrings.
     """
-    source = inspect.getsource(cls)
+    try:
+        source = inspect.getsource(cls)
+    except TypeError:
+        # TypeError is raised for built-in classes
+        return {}
     source = textwrap.dedent(source)
     tree = ast.parse(source)
 
