@@ -182,6 +182,11 @@ class StringDefinedClass:
         docs = get_attribute_docstrings(Child, search_bases=True)
         self.assertEqual(docs['a'], 'This is the docstring for a.')
 
+        doc_a = get_attribute_docstring(Child, 'a', search_bases=False)
+        self.assertIsNone(doc_a, None)
+        doc_a = get_attribute_docstring(Child, 'a', search_bases=True)
+        self.assertEqual(doc_a, 'This is the docstring for a.')
+
 
     def test_overridden_attribute(self) -> None:
         class Parent:
@@ -194,6 +199,8 @@ class StringDefinedClass:
         
         docs = get_attribute_docstrings(Child, search_bases=True)
         self.assertEqual(docs['a'], 'This is the overridden docstring.')
+        doc_a = get_attribute_docstring(Child, 'a', search_bases=True)
+        self.assertEqual(doc_a, 'This is the overridden docstring.')
 
 
 if __name__ == '__main__':

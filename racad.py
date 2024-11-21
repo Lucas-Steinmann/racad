@@ -65,17 +65,10 @@ class AttributeDocstringVisitor(ast.NodeVisitor):
         # Reset the last attribute name after processing
         self.last_attr_name = None
 
+
 def _get_attribute_docstrings(
         cls: Type[Any], 
 ) -> Dict[str, str]:
-    """Get the docstrings of all attributes of a class.
-
-    Args:
-        cls: The class to inspect.
-
-    Returns:
-        A dictionary mapping attribute names to their docstrings.
-    """
     try:
         source = inspect.getsource(cls)
     except (TypeError, OSError):
@@ -88,6 +81,14 @@ def _get_attribute_docstrings(
     visitor = AttributeDocstringVisitor()
     visitor.visit(tree)
     return visitor.docs
+
+
+def _recursive_collect(class_list):
+    if len(class_list) == 0:
+        return {}
+    base_docs = _recursive_collect(class_list[1:])
+    base_docs.update(_get_attribute_docstrings(class_list[0]))
+    return base_docs
 
 
 def get_attribute_docstrings(
@@ -105,25 +106,30 @@ def get_attribute_docstrings(
     Returns:
         A dictionary mapping attribute names to their docstrings.
     """
-    def _recursive_collect(class_list):
-        if len(class_list) == 0:
-            return {}
-        base_docs = _recursive_collect(class_list[1:])
-        base_docs.update(_get_attribute_docstrings(class_list[0]))
-        return base_docs
-    mro = cls.__mro__ if search_bases else [cls]
-    return _recursive_collect(mro)
+    class_list = cls.__mro__ if search_bases else [cls]
+    return _recursive_collect(class_list)
 
 
-def get_attribute_docstring(cls: Type[Any], attr_name: str) -> Optional[str]:
+def get_attribute_docstring(
+        cls: Type[Any], 
+        attr_name: str,
+        search_bases: bool = False
+) -> Optional[str]:
     """Get the docstring of a specific class attribute.
 
     Args:
         cls: The class to inspect.
         attr_name: The name of the attribute.
+        search_bases: If true, follows the MRO until it finds a docstring.
 
     Returns:
         The docstring of the attribute, or None if not found.
     """
-    docs = get_attribute_docstrings(cls)
-    return docs.get(attr_name)
+    class_list = cls.__mro__ if search_bases else [cls]
+    doc = None
+    for _cls in class_list:
+        docs = _get_attribute_docstrings(_cls)
+        doc = docs.get(attr_name)
+        if doc is not None:
+            break
+    return doc
