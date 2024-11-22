@@ -38,8 +38,14 @@ class TestRACAD(unittest.TestCase):
             class InnerClass:
                 d = 20
                 """Docstring for d."""
+            
+            e = 25
+            """Docstring for e."""
+
         docs_outer = get_attribute_docstrings(OuterClass)
         self.assertEqual(docs_outer['c'], 'Docstring for c.')
+        self.assertEqual(docs_outer['e'], 'Docstring for e.')
+        self.assertNotIn('d', docs_outer)
 
         docs_inner = get_attribute_docstrings(OuterClass.InnerClass)
         self.assertEqual(docs_inner['d'], 'Docstring for d.')

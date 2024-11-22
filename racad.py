@@ -6,12 +6,21 @@ import ast
 from typing import Any, Dict, Optional, Type
 
 class AttributeDocstringVisitor(ast.NodeVisitor):
-    """AST NodeVisitor that collects docstrings of class attributes."""
+    """AST NodeVisitor that collects docstrings of class attributes.
+    
+    Attributes of nested classes are ignored.
+    Multiple class definitions as siblings are not supported and will lead
+    to an undefined output.
+    """
 
     def __init__(self) -> None:
         """Initialize the visitor with an empty docs dictionary."""
         self.docs: Dict[str, str] = {}
         self.last_attr_name: Optional[str] = None
+        # Indicates if a parent already is a class definition.
+        # We skip nested classes. Otherwise, the attributes of nested classes
+        # would be added to the top class.
+        self._in_ClassDef: bool = False
 
     def visit_ClassDef(self, node: ast.ClassDef) -> None:
         """Visit a class definition node.
@@ -19,11 +28,17 @@ class AttributeDocstringVisitor(ast.NodeVisitor):
         Args:
             node: The class definition AST node to visit.
         """
+        if self._in_ClassDef:
+            # skip nested classes
+            return
+        self._in_ClassDef = True
         # Visit all statements in the class body
         for stmt in node.body:
             self.visit(stmt)
         # Reset the last attribute name after processing the class
         self.last_attr_name = None
+        # Reset the flag that we are in a class definition
+        self._in_ClassDef = False
     
     def _store_target_attr_name(self, target: ast.expr) -> None:
         if isinstance(target, ast.Name):
