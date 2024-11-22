@@ -1,5 +1,6 @@
 # RACAD
 ![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/Lucas-Steinmann/racad/unittest.yml?label=unittest)
+[![Coverage](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/Lucas-Steinmann/410f53320ca09f6e661546f5d56a74b0/raw/a985cbaa44e0d8f30485fae36c5091cc160fdca4/greeter-coverage.json)](https://github.com/Lucas-Steinmann/racad/actions/workflows/unittest.yml)
 [![pypi](https://img.shields.io/pypi/v/racad.svg)](https://pypi.python.org/pypi/racad)
 [![versions](https://img.shields.io/pypi/pyversions/racad.svg)](https://github.com/Lucas-Steinmann/racad)
 [![license](https://img.shields.io/github/license/Lucas-Steinmann/racad.svg)](https://github.com/Lucas-Steinmann/racad/blob/main/LICENSE)
