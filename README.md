@@ -5,7 +5,7 @@
 [![license](https://img.shields.io/github/license/Lucas-Steinmann/racad.svg)](https://github.com/Lucas-Steinmann/racad/blob/main/LICENSE)
 
 RACAD stands for Runtime Access for Class Attribute Docstrings.
-This is the source code accompanying [my blogpost](https://www.steinm.net/blog/runtime_accessible_class_attribute_docstrings/) (not online yet).
+This is the source code accompanying [my blogpost](https://www.steinm.net/blog/runtime_accessible_class_attribute_docstrings/).
 
 You can copy this code into your own project or use it as a library.
 
@@ -37,6 +37,21 @@ from racad import get_attribute_docstrings
 get_attribute_docstrings(MyClass)
 # Output: {'a': 'This is the docstring of a.'}
 ```
+
+### Inheritance
+
+If you want to also search the base classes, set `search_bases=True`:
+
+```python
+class MyChild(MyClass):
+   b: str = "Hi"
+   """This is the docstring for b."""
+
+get_attribute_docstrings(MyChild, search_bases=True)
+# Output: {'a': 'This is the docstring of a.', 'b': 'This is the docstring for b.'}
+```
+
+This also works for `get_attribute_docstring`.
 
 ## Limitation
 
