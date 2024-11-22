@@ -1,7 +1,7 @@
 
 [project]
 name = "racad"
-version = "0.1.0"
+version = "0.1.2"
 description = "Runtime Access for Class Attribute Docstrings"
 readme = "README.md"
 authors = [{ name = "Lucas Steinmann", email = "lucas@steinm.net" }]

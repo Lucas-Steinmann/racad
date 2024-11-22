@@ -220,3 +220,16 @@ class StringDefinedClass:
         self.assertEqual(docs['a'], 'This is the overridden docstring.')
         doc_a = get_attribute_docstring(Child, 'a', search_bases=True)
         self.assertEqual(doc_a, 'This is the overridden docstring.')
+
+    def test_nested_class_in_between_attr_and_docs(self) -> None:
+        """Test retrieving docstrings when a nested class is between attribute and docstring."""
+        class OuterClass2:
+            c = 15
+
+            class InnerClass2:
+                ...
+
+            """Random string"""
+
+        docs_outer = get_attribute_docstrings(OuterClass2)
+        self.assertNotIn('c', docs_outer)

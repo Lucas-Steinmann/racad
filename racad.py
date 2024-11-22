@@ -30,6 +30,7 @@ class AttributeDocstringVisitor(ast.NodeVisitor):
         """
         if self._in_ClassDef:
             # skip nested classes
+            self.last_attr_name = None
             return
         self._in_ClassDef = True
         # Visit all statements in the class body
