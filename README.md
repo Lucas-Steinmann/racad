@@ -1,4 +1,8 @@
 # RACAD
+![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/Lucas-Steinmann/racad/unittest.yml?label=unittest)
+[![pypi](https://img.shields.io/pypi/v/racad.svg)](https://pypi.python.org/pypi/racad)
+[![versions](https://img.shields.io/pypi/pyversions/racad.svg)](https://github.com/Lucas-Steinmann/racad)
+[![license](https://img.shields.io/github/license/Lucas-Steinmann/racad.svg)](https://github.com/Lucas-Steinmann/racad/blob/main/LICENSE)
 
 RACAD stands for Runtime Access for Class Attribute Docstrings.
 This is the source code accompanying [my blogpost](https://www.steinm.net/blog/runtime_accessible_class_attribute_docstrings/) (not online yet).
